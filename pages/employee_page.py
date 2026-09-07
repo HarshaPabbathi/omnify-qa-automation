@@ -1,25 +1,3 @@
-"""
-employee_page.py
-
-Page Object for the OrangeHRM Add Employee page.
-
-Fixes applied:
-  1. click_save() previously waited only for the loader to become
-     INVISIBLE, without confirming it had appeared first. On a fast page
-     load, the pre-existing loader can already be gone by the time the
-     check runs, letting Save get clicked before the Angular form (and
-     especially the auto-populated Employee ID field) has fully
-     initialized. Now we wait for the loader to appear, then disappear,
-     the same fix applied to EmployeeListPage.
-  2. Before typing, we explicitly wait for the Employee ID field to be
-     populated with a non-empty value — this is OrangeHRM's own signal
-     that the Add Employee form has finished loading/initializing.
-  3. is_employee_saved() no longer swallows failures silently. If the
-     URL never changes to viewPersonalDetails, it actively looks for
-     inline validation error messages on the page and prints them, so a
-     failed save tells you *why* instead of just "was not saved".
-"""
-
 import time
 
 from selenium.webdriver.common.by import By
@@ -67,25 +45,6 @@ class EmployeePage(BasePage):
     # ------------------------------------------------
     # Wait for loader (appear, then disappear)
     # ------------------------------------------------
-
-    def wait_for_loader(self, appear_timeout=2, disappear_timeout=10):
-        """Best-effort wait: give the loader a short window to show up at
-        all, then wait for it to go away. If it never appears (already
-        gone, or too fast to catch), that's fine — we move on."""
-
-        try:
-            WebDriverWait(self.driver, appear_timeout).until(
-                EC.visibility_of_element_located(self.LOADER)
-            )
-        except TimeoutException:
-            pass
-
-        try:
-            self.wait.until(
-                EC.invisibility_of_element_located(self.LOADER)
-            )
-        except TimeoutException:
-            pass
 
     # ------------------------------------------------
     # Wait for the Add Employee form to be fully ready
@@ -137,36 +96,36 @@ class EmployeePage(BasePage):
     # ------------------------------------------------
 
     def click_save(self):
-
-        self.wait_for_loader()
-
-        save_button = self.wait.until(
-            EC.element_to_be_clickable(self.SAVE_BUTTON)
-        )
-
-        self.driver.execute_script(
-            "arguments[0].scrollIntoView({block: 'center'});",
-            save_button
-        )
-
-        save_button.click()
-
-        # Give the submit its own loader cycle to complete before anyone
-        # checks the URL/result.
-        self.wait_for_loader()
+        self.click(self.SAVE_BUTTON)
 
     # ------------------------------------------------
     # Add employee
     # ------------------------------------------------
 
-    def add_employee(self, first_name, last_name):
 
-        self.wait_for_form_ready()
-
+    def add_employee(
+        self,
+        first_name,
+        last_name,
+        middle_name=""
+    ):
+        
         self.enter_first_name(first_name)
+
+        if middle_name:
+            self.enter_middle_name(middle_name)
+
         self.enter_last_name(last_name)
 
         self.click_save()
+
+    # Wait for the employee details page to load
+        self.wait.until(
+            lambda driver:
+            "viewPersonalDetails" in driver.current_url
+            or "employeeId" in driver.current_url
+        )
+
 
     # ------------------------------------------------
     # Diagnose a failed save

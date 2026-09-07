@@ -1,9 +1,3 @@
-"""
-test_login.py
-
-Login test cases for OrangeHRM.
-"""
-
 import os
 import sys
 

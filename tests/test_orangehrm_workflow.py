@@ -1,20 +1,3 @@
-"""
-test_orangehrm_workflow.py
-
-End-to-end OrangeHRM automation workflow:
-
-1. Login
-2. Hover over PIM and click
-3. Add 4 employees
-4. Navigate to Employee List
-5. Search and verify employees
-6. Logout
-
-Run:
-
-pytest -s -v
-"""
-
 import os
 import sys
 import time

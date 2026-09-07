@@ -1,22 +1,3 @@
-"""
-employee_list_page.py
-
-Page Object for the OrangeHRM Employee List page.
-Handles employee searching and verification.
-
-Fix applied: the previous version waited only for the loader to become
-INVISIBLE, without first confirming it had appeared. On fast AJAX
-responses the loader can appear and disappear before that wait even
-starts polling, so the code would inspect the results table before it
-had actually refreshed. This version:
-  1. Waits for the loader to appear, then disappear (best-effort).
-  2. Actively polls the results table until it either contains the
-     expected employee's name, shows "No Records Found", or times out,
-     instead of trusting loader timing alone.
-  3. Clicks Reset before every search to avoid filter state bleeding
-     into the next search.
-"""
-
 import time
 
 from selenium.webdriver.common.by import By

@@ -1,17 +1,3 @@
-"""
-basic_login_test.py
-
-Basic non-POM Selenium login test script.
-
-This script demonstrates:
-1. Valid login
-2. Invalid login
-
-Run:
-
-python manual_script/basic_login_test.py
-"""
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
