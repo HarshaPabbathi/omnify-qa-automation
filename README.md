@@ -255,7 +255,3 @@ These are identified as potential issues and should be validated against the cur
 * Add screenshots automatically when a test fails.
 * Integrate the tests with a CI/CD pipeline.
 * Improve autocomplete handling during employee search.
-
-## Author
-
-Harsha Pabbathi
